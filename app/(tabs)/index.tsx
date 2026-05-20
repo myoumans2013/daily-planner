@@ -12,6 +12,13 @@ export default function HomeScreen() {
       <Text style={styles.greeting}>Good morning, Michael</Text>
       <Text style={styles.date}>Wednesday, May 20</Text>
       <View style={styles.progressCard}>
+        <Text style={styles.sectionTitle}>Today&apos;s Tasks</Text>
+        <View style={styles.taskCard}>
+          <Text style={styles.taskText}>☐ Finish React Native screen</Text>
+        </View>
+        <View style={styles.taskCard}>
+          <Text style={styles.taskText}>☑ Drink water</Text>
+        </View>
         <Text style={styles.cardTitle}>Today&apos;s Progress</Text>
         <Text style={styles.progressText}>2 of 4 tasks completed</Text>
         <View style={styles.progressBarBackground}>
@@ -68,5 +75,25 @@ const styles = StyleSheet.create({
     width: "50%",
     backgroundColor: "#2563EB",
     borderRadius: 10,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#111827",
+    marginTop: 24,
+    marginBottom: 12,
+  },
+
+  taskCard: {
+    backgroundColor: "#ffffff",
+    padding: 14,
+    borderRadius: 16,
+    marginBottom: 12,
+  },
+
+  taskText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#111827",
   },
 });
