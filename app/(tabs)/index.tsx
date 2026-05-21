@@ -4,15 +4,18 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  TextInput,
 } from "react-native";
 import { useState } from "react";
 
 export default function HomeScreen() {
   const [tasks, setTasks] = useState([
-    { id: 1, title: "Finish Reace Native screen", completed: false },
+    { id: 1, title: "Finish React Native screen", completed: false },
     { id: 2, title: "Apply to 5 jobs", completed: true },
     { id: 3, title: "Drink water", completed: true },
   ]);
+
+  const [newTask, setNewTask] = useState("");
 
   const completedTasks = tasks.filter((task) => task.completed).length;
   const progress = completedTasks / tasks.length;
@@ -24,6 +27,19 @@ export default function HomeScreen() {
       ),
     );
   };
+
+  const addTask = () => {
+    if (newTask.trim() === "") return;
+
+    const task = {
+      id: Date.now(),
+      title: newTask,
+      completed: false,
+    };
+    setTasks([...tasks, task]);
+    setNewTask("");
+  };
+
   return (
     <View style={styles.header}>
       <Text style={styles.greeting}>Good morning, Michael</Text>
@@ -41,18 +57,26 @@ export default function HomeScreen() {
             </Text>
           </TouchableOpacity>
         ))}
-        <View style={styles.taskCard}>
-          <Text style={styles.taskText}>☐ Finish React Native screen</Text>
-        </View>
-        <View style={styles.taskCard}>
-          <Text style={styles.taskText}>☑ Drink water</Text>
-        </View>
+
         <Text style={styles.cardTitle}>Today&apos;s Progress</Text>
-        <Text style={styles.progressText}>2 of 4 tasks completed</Text>
+        <Text style={styles.progressText}>
+          {completedTasks} of {tasks.length} tasks completed
+        </Text>
         <View style={styles.progressBarBackground}>
-          <View style={styles.progressBarFill} />
+          <View
+            style={[styles.progressBarFill, { width: `${progress * 100}%` }]}
+          />
         </View>
       </View>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter a new task..."
+        value={newTask}
+        onChangeText={setNewTask}
+      />
+      <TouchableOpacity style={styles.addButton} onPress={addTask}>
+        <Text style={styles.addButtonText}>Add Text</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -100,7 +124,6 @@ const styles = StyleSheet.create({
   },
   progressBarFill: {
     height: "100%",
-    width: "50%",
     backgroundColor: "#2563EB",
     borderRadius: 10,
   },
@@ -123,5 +146,27 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: "#111827",
+  },
+  input: {
+    backgroundColor: "#FFFFFF",
+    padding: 16,
+    borderRadius: 16,
+    marginTop: 20,
+    marginBottom: 12,
+    fontSize: 16,
+  },
+
+  addButton: {
+    backgroundColor: "#111827",
+    padding: 16,
+    borderRadius: 16,
+    alignItems: "center",
+    marginBottom: 24,
+  },
+
+  addButtonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "700",
   },
 });
