@@ -5,14 +5,42 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
+import { useState } from "react";
 
 export default function HomeScreen() {
+  const [tasks, setTasks] = useState([
+    { id: 1, title: "Finish Reace Native screen", completed: false },
+    { id: 2, title: "Apply to 5 jobs", completed: true },
+    { id: 3, title: "Drink water", completed: true },
+  ]);
+
+  const completedTasks = tasks.filter((task) => task.completed).length;
+  const progress = completedTasks / tasks.length;
+
+  const toggleTask = (id: number) => {
+    setTasks(
+      tasks.map((task) =>
+        task.id === id ? { ...task, completed: !task.completed } : task,
+      ),
+    );
+  };
   return (
     <View style={styles.header}>
       <Text style={styles.greeting}>Good morning, Michael</Text>
       <Text style={styles.date}>Wednesday, May 20</Text>
       <View style={styles.progressCard}>
         <Text style={styles.sectionTitle}>Today&apos;s Tasks</Text>
+        {tasks.map((task) => (
+          <TouchableOpacity
+            key={task.id}
+            style={styles.taskCard}
+            onPress={() => toggleTask(task.id)}
+          >
+            <Text style={styles.taskText}>
+              {task.completed ? "☑" : "☐"} {task.title}
+            </Text>
+          </TouchableOpacity>
+        ))}
         <View style={styles.taskCard}>
           <Text style={styles.taskText}>☐ Finish React Native screen</Text>
         </View>
