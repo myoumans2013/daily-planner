@@ -40,6 +40,10 @@ export default function HomeScreen() {
     setNewTask("");
   };
 
+  const deleteTask = (id: number) => {
+    setTasks(tasks.filter((task) => task.id !== id));
+  };
+
   return (
     <View style={styles.header}>
       <Text style={styles.greeting}>Good morning, Michael</Text>
@@ -52,9 +56,20 @@ export default function HomeScreen() {
             style={styles.taskCard}
             onPress={() => toggleTask(task.id)}
           >
-            <Text style={styles.taskText}>
-              {task.completed ? "☑" : "☐"} {task.title}
-            </Text>
+            <View style={styles.taskRow}>
+              <Text
+                style={[
+                  styles.taskText,
+                  task.completed && styles.completedTask,
+                ]}
+              >
+                {task.completed ? "☑" : "☐"} {task.title}
+              </Text>
+
+              <TouchableOpacity onPress={() => deleteTask(task.id)}>
+                <Text style={styles.deleteText}>Delete</Text>
+              </TouchableOpacity>
+            </View>
           </TouchableOpacity>
         ))}
 
@@ -168,5 +183,19 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "700",
+  },
+  taskRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+
+  deleteText: {
+    color: "#DC2626",
+    fontWeight: "600",
+  },
+  completedTask: {
+    textDecorationLine: "line-through",
+    color: "#9CA3AF",
   },
 });
