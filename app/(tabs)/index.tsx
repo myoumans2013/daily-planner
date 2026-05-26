@@ -10,12 +10,28 @@ import {
 
 export default function HomeScreen() {
   const [tasks, setTasks] = useState([
-    { id: 1, title: "Finish React Native screen", completed: false },
-    { id: 2, title: "Apply to 5 jobs", completed: false },
-    { id: 3, title: "Drink water", completed: true },
+    {
+      id: 1,
+      title: "Finish React Native screen",
+      completed: false,
+      priority: "High",
+    },
+    {
+      id: 2,
+      title: "Apply to 5 jobs",
+      completed: false,
+      priority: "Medium",
+    },
+    {
+      id: 3,
+      title: "Drink water",
+      completed: true,
+      priority: "Low",
+    },
   ]);
 
   const [newTask, setNewTask] = useState("");
+  const [priority, setPriority] = useState("Medium");
 
   const completedTasks = tasks.filter((task) => task.completed).length;
   const progress = tasks.length === 0 ? 0 : completedTasks / tasks.length;
@@ -35,6 +51,7 @@ export default function HomeScreen() {
       id: Date.now(),
       title: newTask,
       completed: false,
+      priority: priority,
     };
 
     setTasks([...tasks, task]);
@@ -43,6 +60,12 @@ export default function HomeScreen() {
 
   const deleteTask = (id: number) => {
     setTasks(tasks.filter((task) => task.id !== id));
+  };
+
+  const getPriorityColor = (priority: string) => {
+    if (priority === "High") return "#DC2626";
+    if (priority === "Medium") return "#F59E0B";
+    return "#16A34A";
   };
 
   return (
@@ -54,7 +77,6 @@ export default function HomeScreen() {
 
       <View style={styles.progressCard}>
         <Text style={styles.cardTitle}>Today's Progress</Text>
-
         <Text style={styles.progressText}>
           {completedTasks} of {tasks.length} tasks completed
         </Text>
@@ -73,6 +95,28 @@ export default function HomeScreen() {
         onChangeText={setNewTask}
       />
 
+      <View style={styles.priorityRow}>
+        {["Low", "Medium", "High"].map((level) => (
+          <TouchableOpacity
+            key={level}
+            style={[
+              styles.priorityButton,
+              priority === level && styles.selectedPriority,
+            ]}
+            onPress={() => setPriority(level)}
+          >
+            <Text
+              style={[
+                styles.priorityButtonText,
+                priority === level && styles.selectedPriorityText,
+              ]}
+            >
+              {level}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
       <TouchableOpacity style={styles.addButton} onPress={addTask}>
         <Text style={styles.addButtonText}>Add Task</Text>
       </TouchableOpacity>
@@ -86,11 +130,25 @@ export default function HomeScreen() {
           onPress={() => toggleTask(task.id)}
         >
           <View style={styles.taskRow}>
-            <Text
-              style={[styles.taskText, task.completed && styles.completedTask]}
-            >
-              {task.completed ? "☑" : "☐"} {task.title}
-            </Text>
+            <View>
+              <Text
+                style={[
+                  styles.taskText,
+                  task.completed && styles.completedTask,
+                ]}
+              >
+                {task.completed ? "☑" : "☐"} {task.title}
+              </Text>
+
+              <Text
+                style={[
+                  styles.priorityText,
+                  { color: getPriorityColor(task.priority) },
+                ]}
+              >
+                {task.priority} Priority
+              </Text>
+            </View>
 
             <TouchableOpacity onPress={() => deleteTask(task.id)}>
               <Text style={styles.deleteText}>Delete</Text>
@@ -109,56 +167,47 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 60,
   },
-
   header: {
     marginBottom: 20,
   },
-
   greeting: {
     fontSize: 28,
     fontWeight: "700",
     color: "#111827",
   },
-
   date: {
     fontSize: 16,
     color: "#6B7280",
     marginTop: 4,
   },
-
   progressCard: {
     backgroundColor: "#FFFFFF",
     padding: 18,
     borderRadius: 18,
     marginBottom: 18,
   },
-
   cardTitle: {
     fontSize: 18,
     fontWeight: "700",
     color: "#111827",
   },
-
   progressText: {
     fontSize: 14,
     color: "#6B7280",
     marginTop: 8,
     marginBottom: 12,
   },
-
   progressBarBackground: {
     height: 10,
     backgroundColor: "#E5E7EB",
     borderRadius: 10,
     overflow: "hidden",
   },
-
   progressBarFill: {
     height: "100%",
     backgroundColor: "#2563EB",
     borderRadius: 10,
   },
-
   input: {
     backgroundColor: "#FFFFFF",
     padding: 16,
@@ -166,7 +215,28 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     fontSize: 16,
   },
-
+  priorityRow: {
+    flexDirection: "row",
+    gap: 10,
+    marginBottom: 12,
+  },
+  priorityButton: {
+    flex: 1,
+    backgroundColor: "#FFFFFF",
+    padding: 12,
+    borderRadius: 12,
+    alignItems: "center",
+  },
+  selectedPriority: {
+    backgroundColor: "#111827",
+  },
+  priorityButtonText: {
+    color: "#111827",
+    fontWeight: "600",
+  },
+  selectedPriorityText: {
+    color: "#FFFFFF",
+  },
   addButton: {
     backgroundColor: "#111827",
     padding: 16,
@@ -174,44 +244,41 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 24,
   },
-
   addButtonText: {
     color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "700",
   },
-
   sectionTitle: {
     fontSize: 20,
     fontWeight: "700",
     color: "#111827",
     marginBottom: 12,
   },
-
   taskCard: {
     backgroundColor: "#FFFFFF",
     padding: 16,
     borderRadius: 16,
     marginBottom: 12,
   },
-
   taskRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
-
   taskText: {
     fontSize: 16,
     fontWeight: "600",
     color: "#111827",
   },
-
   completedTask: {
     textDecorationLine: "line-through",
     color: "#9CA3AF",
   },
-
+  priorityText: {
+    fontSize: 13,
+    marginTop: 4,
+  },
   deleteText: {
     color: "#DC2626",
     fontWeight: "600",
